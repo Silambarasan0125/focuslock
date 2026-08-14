@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/overlay_soft_background"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:padding="18dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/overlay_panel_surface"
+        android:elevation="14dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="22dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.13"
+            android:text="@string/soft_block_eyebrow"
+            android:textColor="@color/focus_accent"
+            android:textSize="11sp" />
+
+        <ImageView
+            android:layout_width="94dp"
+            android:layout_height="94dp"
+            android:contentDescription="@string/lock_icon_description"
+            android:src="@drawable/focuslock_mascot" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/soft_block_title"
+            android:textColor="@color/focus_text"
+            android:textSize="27sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/soft_blocked_app_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="@string/soft_blocked_app_placeholder"
+            android:textColor="@color/focus_text_muted"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/motivational_prompt_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/surface_card_highlight"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:padding="16dp"
+            android:text="@string/soft_block_prompt_placeholder"
+            android:textColor="@color/focus_text"
+            android:textSize="17sp"
+            android:textStyle="italic" />
+
+        <EditText
+            android:id="@+id/password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/overlay_input_background"
+            android:hint="@string/soft_block_password_hint"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColor="@color/focus_text"
+            android:textColorHint="@color/focus_text_muted" />
+
+        <EditText
+            android:id="@+id/journal_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="156dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/overlay_input_background"
+            android:gravity="top|start"
+            android:hint="@string/soft_block_journal_hint"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="6"
+            android:textColor="@color/focus_text"
+            android:textColorHint="@color/focus_text_muted" />
+
+        <TextView
+            android:id="@+id/line_counter_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:gravity="end"
+            android:text="@string/soft_block_line_count_placeholder"
+            android:textColor="@color/focus_accent"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/unlock_button"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/overlay_primary_button"
+            android:backgroundTint="@null"
+            android:enabled="false"
+            android:text="@string/soft_block_unlock_button_text"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/go_home_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/overlay_home_button"
+            android:backgroundTint="@null"
+            android:text="@string/go_home_button_text"
+            android:textAllCaps="false"
+            android:textColor="@color/focus_text"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/safety_controls_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            android:text="@string/safety_controls_button_text"
+            android:textAllCaps="false"
+            android:textColor="@color/focus_text_muted" />
+    </LinearLayout>
+</ScrollView>

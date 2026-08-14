@@ -1,0 +1,112 @@
+<resources>
+    <string name="app_name">FocusLock</string>
+
+    <string name="setup_eyebrow">TINY LOCK · BIG BOUNDARIES</string>
+    <string name="setup_password_title">Choose your escape key</string>
+    <string name="setup_password_subtitle">You will need this password for pauses and safety controls. Make it memorable—not guessable.</string>
+    <string name="setup_password_hint">Create password</string>
+    <string name="setup_confirm_password_hint">Confirm password</string>
+    <string name="setup_password_rule">Use at least 6 characters.</string>
+    <string name="setup_password_too_short">A little longer—6 characters minimum.</string>
+    <string name="setup_confirm_prompt">Now type it once more.</string>
+    <string name="setup_password_ready">Looks good. Your future self approves.</string>
+    <string name="setup_save_password_button_text">Lock it in</string>
+    <string name="password_saved_toast">Password saved. FocusLock is ready.</string>
+
+    <string name="dashboard_eyebrow">YOUR DISTRACTION BOUNCER</string>
+    <string name="dashboard_title">FocusLock</string>
+    <string name="dashboard_subtitle">Instagram, YouTube, and Reddit can wait.</string>
+    <string name="status_label">CURRENT STATUS</string>
+    <string name="status_ready">Ready and watching</string>
+    <string name="status_paused">Taking a short break</string>
+    <string name="status_needs_setup">Two permissions still run the show</string>
+    <string name="zone_hard_summary">Hard focus · 8:30 PM–10:00 AM</string>
+    <string name="zone_soft_summary">Reflection gate · 10:00 AM–3:00 PM</string>
+    <string name="zone_free_summary">Free zone · until 8:30 PM</string>
+    <string name="pause_inactive">No pause active</string>
+    <string name="pause_remaining">Paused for about %1$d more min</string>
+
+    <string name="section_setup">SETUP CHECK</string>
+    <string name="accessibility_title">App detection</string>
+    <string name="accessibility_body">Lets FocusLock notice when a blocked app opens.</string>
+    <string name="overlay_title">Block screen</string>
+    <string name="overlay_body">Shows the hard or reflection screen over blocked apps.</string>
+    <string name="battery_title">Battery reliability</string>
+    <string name="battery_body">Recommended so Android does not put FocusLock to sleep.</string>
+    <string name="auto_start_title">Auto-start help</string>
+    <string name="auto_start_body">Useful on OPPO, OnePlus, Realme, Xiaomi, and similar phones.</string>
+    <string name="auto_start_help">Your phone maker may stop background apps. In your phone settings, allow FocusLock to auto-start and run in the background. The exact menu name varies by device.</string>
+    <string name="permission_on">ON</string>
+    <string name="permission_off">OFF</string>
+    <string name="permission_recommended">RECOMMENDED</string>
+    <string name="enable_accessibility">Enable app detection</string>
+    <string name="review_accessibility">Review app detection</string>
+    <string name="enable_overlay">Allow block screen</string>
+    <string name="review_overlay">Review block screen</string>
+    <string name="battery_already_ready">Battery setup is already ready.</string>
+
+    <string name="section_plan">YOUR PLAN</string>
+    <string name="blocked_apps_title">Blocked apps</string>
+    <string name="blocked_apps_value">Instagram  ·  YouTube  ·  Reddit</string>
+    <string name="schedule_title">Daily rhythm</string>
+    <string name="schedule_value">Hard 8:30 PM–10 AM  ·  Soft 10 AM–3 PM</string>
+
+    <string name="safety_title">Safety hatch</string>
+    <string name="safety_body">GPay, PhonePe, Paytm, and BHIM are always allowed. Any FocusLock overlay is removed as soon as one opens.</string>
+    <string name="pause_focus_15">Pause FocusLock for 15 min</string>
+    <string name="resume_focus_now">Resume FocusLock now</string>
+    <string name="focus_paused_toast">FocusLock paused for 15 minutes.</string>
+    <string name="focus_resumed_toast">FocusLock resumed.</string>
+    <string name="payment_compatibility_button">Payment app still complaining?</string>
+    <string name="payment_compatibility_title">Payment compatibility fallback</string>
+    <string name="payment_compatibility_message">Strict payment apps can reject both App detection and the Block screen permission—even when no overlay is visible. FocusLock will switch off App detection and open the Block screen setting. Turn that permission off too, then reopen your payment app. Re-enable both from FocusLock afterward.</string>
+    <string name="disable_detection_temporarily">Disable and open setting</string>
+    <string name="payment_compatibility_enabled_toast">App detection is off. Now turn off “Display over other apps” on the next screen.</string>
+
+    <string name="lock_icon_description">Funny FocusLock padlock mascot holding a timer</string>
+    <string name="hard_block_eyebrow">HARD FOCUS</string>
+    <string name="hard_block_app_locked_placeholder">This app is off duty.</string>
+    <string name="hard_block_app_locked_message">%1$s is off duty.</string>
+    <string name="hard_block_countdown_placeholder">Unlock time is loading…</string>
+    <string name="hard_block_countdown">Back in %1$d hr %2$d min</string>
+    <string name="hard_block_subtitle">Nice try. Your thumb has been overruled.</string>
+    <string name="hard_block_undismissable_message">Only the distracting app is blocked—your phone and payment apps stay usable.</string>
+    <string name="go_home_button_text">Back to real life</string>
+    <string name="safety_controls_button_text">Open safety controls</string>
+
+    <string name="soft_block_eyebrow">QUICK HONESTY CHECK</string>
+    <string name="soft_block_title">Is this scroll worth it?</string>
+    <string name="soft_blocked_app_placeholder">You opened a blocked app during reflection time.</string>
+    <string name="soft_blocked_app_message">You opened %1$s during reflection time.</string>
+    <string name="soft_block_prompt_placeholder">What are you actually avoiding right now?</string>
+    <string name="soft_block_password_hint">Your FocusLock password</string>
+    <string name="soft_block_journal_hint">Write six honest, non-empty lines…</string>
+    <string name="soft_block_line_count_placeholder">0 of 6 lines</string>
+    <string name="soft_block_line_count">%1$d of 6 lines</string>
+    <string name="soft_block_unlock_button_text">Unlock for 30 minutes</string>
+    <string name="soft_block_unlocked_toast">Reflection complete. You have 30 minutes.</string>
+    <string name="soft_block_unlock_error">Password and six non-empty lines are required.</string>
+    <string name="generic_blocked_app_name">This app</string>
+
+    <string-array name="motivational_prompts">
+        <item>Is this worth the next two hours of your life?</item>
+        <item>What are you actually avoiding right now?</item>
+        <item>Name one real thing you could do instead.</item>
+        <item>Are you bored—or avoiding something?</item>
+        <item>You said you would do something today. Still true?</item>
+    </string-array>
+
+    <string name="password_gate_title">Password check</string>
+    <string name="password_gate_message">This control can weaken a focus block, so prove it is really you.</string>
+    <string name="password_gate_hint">Enter your password</string>
+    <string name="password_gate_verify">Continue</string>
+    <string name="error_password_mismatch">Those passwords do not match yet.</string>
+    <string name="error_invalid_password">Incorrect password. Try again.</string>
+    <string name="cancel">Cancel</string>
+    <string name="got_it">Got it</string>
+
+    <string name="notification_channel_name">FocusLock block screen</string>
+    <string name="notification_title">FocusLock is active</string>
+    <string name="notification_body">Tap for pause and payment safety controls.</string>
+    <string name="accessibility_service_description">FocusLock notices when Instagram, YouTube, or Reddit is in the foreground so it can show your focus screen.</string>
+</resources>

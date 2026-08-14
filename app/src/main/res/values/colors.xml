@@ -1,0 +1,19 @@
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="focus_bg">#0A0D1A</color>
+    <color name="focus_bg_top">#171036</color>
+    <color name="focus_surface">#171B2E</color>
+    <color name="focus_surface_high">#222844</color>
+    <color name="focus_border">#343B5C</color>
+    <color name="focus_primary">#8B5CF6</color>
+    <color name="focus_primary_dark">#6D28D9</color>
+    <color name="focus_accent">#FF9F1C</color>
+    <color name="focus_text">#F8FAFC</color>
+    <color name="focus_text_muted">#AAB3CC</color>
+    <color name="focus_success">#34D399</color>
+    <color name="focus_warning">#FBBF24</color>
+    <color name="focus_danger">#FB7185</color>
+    <color name="focus_input">#101426</color>
+</resources>

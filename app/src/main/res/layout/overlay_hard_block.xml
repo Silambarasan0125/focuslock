@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/overlay_hard_background"
+    android:padding="22dp">
+
+    <LinearLayout
+        android:id="@+id/hard_block_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/overlay_panel_surface"
+        android:elevation="14dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.14"
+            android:text="@string/hard_block_eyebrow"
+            android:textColor="@color/focus_danger"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/lock_icon"
+            android:layout_width="132dp"
+            android:layout_height="132dp"
+            android:layout_marginTop="4dp"
+            android:contentDescription="@string/lock_icon_description"
+            android:src="@drawable/focuslock_mascot" />
+
+        <TextView
+            android:id="@+id/blocked_app_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/hard_block_app_locked_placeholder"
+            android:textColor="@color/focus_text"
+            android:textSize="29sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:text="@string/hard_block_subtitle"
+            android:textColor="@color/focus_text_muted"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/countdown_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/status_pill"
+            android:text="@string/hard_block_countdown_placeholder"
+            android:textColor="@color/focus_success"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/go_home_button"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/overlay_primary_button"
+            android:backgroundTint="@null"
+            android:text="@string/go_home_button_text"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/safety_controls_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/overlay_home_button"
+            android:backgroundTint="@null"
+            android:text="@string/safety_controls_button_text"
+            android:textAllCaps="false"
+            android:textColor="@color/focus_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dismiss_info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/hard_block_undismissable_message"
+            android:textColor="@color/focus_text_muted"
+            android:textSize="13sp" />
+    </LinearLayout>
+</FrameLayout>
