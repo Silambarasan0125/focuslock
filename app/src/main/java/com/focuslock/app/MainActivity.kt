@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         PasswordManager.initialize(applicationContext)
+        stopService(Intent(this, OverlayService::class.java))
         if (PasswordManager.isPasswordSet()) showMainScreenFragment() else showSetupFragment()
     }
 
@@ -191,6 +192,10 @@ class MainScreenFragment : Fragment() {
             mainActivity().showPasswordGate { showPaymentCompatibilityHelp() }
         }
 
+        view.findViewById<Button>(R.id.btn_choose_blocked_apps).setOnClickListener {
+            mainActivity().showPasswordGate { showBlockedAppPicker(view) }
+        }
+
         updateDashboard(view)
         scrollToSafetyControlsIfRequested(view)
         return view
@@ -244,6 +249,42 @@ class MainScreenFragment : Fragment() {
             getString(if (overlayEnabled) R.string.review_overlay else R.string.enable_overlay)
         root.findViewById<Button>(R.id.btn_pause_focus).text =
             getString(if (paused) R.string.resume_focus_now else R.string.pause_focus_15)
+
+        val selectedLabels = BlockedAppsStore.getSelectedPackages(context)
+            .map { packageName -> BlockedAppsStore.getAppLabel(context, packageName) }
+            .sortedBy { label -> label.lowercase() }
+        root.findViewById<TextView>(R.id.tv_blocked_apps_value).text =
+            selectedLabels.joinToString("  \u00b7  ").ifEmpty { getString(R.string.blocked_apps_empty) }
+    }
+
+    private fun showBlockedAppPicker(root: View) {
+        val context = requireContext()
+        val apps = BlockedAppsStore.getSelectableApps(context)
+        if (apps.isEmpty()) {
+            Toast.makeText(context, R.string.no_apps_found, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val selectedPackages = BlockedAppsStore.getSelectedPackages(context).toMutableSet()
+        val labels = apps.map { app -> app.label }.toTypedArray()
+        val checkedItems = BooleanArray(apps.size) { index ->
+            apps[index].packageName in selectedPackages
+        }
+
+        AlertDialog.Builder(context)
+            .setTitle(R.string.choose_blocked_apps_title)
+            .setMessage(R.string.choose_blocked_apps_message)
+            .setMultiChoiceItems(labels, checkedItems) { _, which, isChecked ->
+                val packageName = apps[which].packageName
+                if (isChecked) selectedPackages.add(packageName) else selectedPackages.remove(packageName)
+            }
+            .setPositiveButton(R.string.save_blocked_apps) { _, _ ->
+                BlockedAppsStore.saveSelectedPackages(context, selectedPackages)
+                updateDashboard(root)
+                Toast.makeText(context, R.string.blocked_apps_saved, Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun isAccessibilityServiceEnabled(): Boolean {

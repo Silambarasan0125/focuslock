@@ -310,12 +310,25 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_blocked_apps_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
                 android:text="@string/blocked_apps_value"
                 android:textColor="@color/focus_accent"
                 android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btn_choose_blocked_apps"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/button_secondary"
+                android:backgroundTint="@null"
+                android:text="@string/choose_blocked_apps_button"
+                android:textAllCaps="false"
+                android:textColor="@color/focus_text"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"

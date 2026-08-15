@@ -36,6 +36,17 @@ class OverlayService : Service() {
     private var blockedAppLabel: String = "this app"
     private val handler = Handler(Looper.getMainLooper())
 
+    private val freeZoneGuardRunnable = object : Runnable {
+        override fun run() {
+            if (TimeZoneHelper.getCurrentZone() == TimeZoneHelper.BlockZone.FREE) {
+                Log.d(tag, "Free zone began; removing overlay cleanly")
+                stopSelf()
+                return
+            }
+            handler.postDelayed(this, FREE_ZONE_CHECK_MILLIS)
+        }
+    }
+
     private val hardBlockCountdownRunnable = object : Runnable {
         override fun run() {
             updateHardBlockCountdown()
@@ -62,6 +73,7 @@ class OverlayService : Service() {
         private const val SESSION_UNLOCK_PREFS = "session_unlock_prefs"
         private const val KEY_LAST_UNLOCK_TIMESTAMP = "last_unlock_timestamp"
         private const val SESSION_COOLDOWN_MILLIS = 30 * 60 * 1000L
+        private const val FREE_ZONE_CHECK_MILLIS = 10_000L
 
         @Volatile
         var isRunning = false
@@ -82,15 +94,19 @@ class OverlayService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startAsForeground()
-
         if (FocusLockState.isPaused(this)) {
             Log.d(tag, "FocusLock is paused; overlay request ignored")
             stopSelf()
             return START_NOT_STICKY
         }
 
-        overlayMode = intent?.getStringExtra(EXTRA_OVERLAY_MODE)
+        if (TimeZoneHelper.getCurrentZone() == TimeZoneHelper.BlockZone.FREE) {
+            Log.d(tag, "Free zone is active; overlay request ignored")
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
+        val requestedMode = intent?.getStringExtra(EXTRA_OVERLAY_MODE)
             ?.let { modeName -> runCatching { OverlayMode.valueOf(modeName) }.getOrNull() }
             ?: run {
                 Log.w(tag, "Overlay request had no valid mode; stopping safely")
@@ -98,9 +114,19 @@ class OverlayService : Service() {
                 return START_NOT_STICKY
             }
 
-        blockedAppLabel = intent?.getStringExtra(EXTRA_BLOCKED_APP_LABEL)
+        val requestedAppLabel = intent?.getStringExtra(EXTRA_BLOCKED_APP_LABEL)
             ?.takeIf { it.isNotBlank() }
             ?: getString(R.string.generic_blocked_app_name)
+
+        if (isRunning && overlayView != null &&
+            overlayMode == requestedMode && blockedAppLabel == requestedAppLabel
+        ) {
+            Log.d(tag, "Existing overlay already matches this request")
+            return START_NOT_STICKY
+        }
+
+        overlayMode = requestedMode
+        blockedAppLabel = requestedAppLabel
 
         if (!Settings.canDrawOverlays(this)) {
             Log.w(tag, "Overlay permission missing; request ignored")
@@ -114,7 +140,10 @@ class OverlayService : Service() {
             return START_NOT_STICKY
         }
 
+        startAsForeground()
         showOverlay(overlayMode)
+        handler.removeCallbacks(freeZoneGuardRunnable)
+        handler.postDelayed(freeZoneGuardRunnable, FREE_ZONE_CHECK_MILLIS)
         return START_NOT_STICKY
     }
 
@@ -122,6 +151,7 @@ class OverlayService : Service() {
         isRunning = false
         handler.removeCallbacks(hardBlockCountdownRunnable)
         handler.removeCallbacks(softBlockPromptRunnable)
+        handler.removeCallbacks(freeZoneGuardRunnable)
         removeOverlay()
         super.onDestroy()
     }

@@ -2,11 +2,12 @@
 
 ![FocusLock mascot](design/focuslock-mascot-source.png)
 
-FocusLock is a personal Android focus companion that puts a little space between you and distracting apps. It blocks Instagram, YouTube, and Reddit with a playful lock-screen mascot, timed focus zones, and short reflection prompts.
+FocusLock is a personal Android focus companion that puts a little space between you and distracting apps. It starts with Instagram, YouTube, and Reddit, and lets you choose more installed apps from the dashboard. A playful lock-screen mascot, timed focus zones, and short reflection prompts help interrupt automatic scrolling.
 
 ## What it does
 
-- Uses Android Accessibility Service to notice when a selected distracting app is opened.
+- Uses Android Accessibility Service to notice when one of your selected distracting apps is opened.
+- Includes a password-protected app picker for adding or removing installed apps without changing code.
 - Shows a firm lock screen from **8:30 PM to 10:00 AM** and a softer reflection screen from **10:00 AM to 3:00 PM**. From **3:00 PM to 8:30 PM**, those apps are freely available.
 - Lets you pause FocusLock for 15 minutes after entering your local password.
 - Includes a payment-app compatibility flow for Google Pay, PhonePe, Paytm, and BHIM.
@@ -37,7 +38,7 @@ On Windows, a debug build and unit tests can be run with:
 
 - FocusLock requests only the accessibility and overlay capabilities needed to present its block screens. Its accessibility configuration does **not** retrieve on-screen content.
 - The local password is stored with Android encrypted preferences. Backups are disabled for this app.
-- The app list and schedule are currently built in, rather than editable from the interface.
+- The daily schedule is currently built in. The blocked-app list is editable from the interface.
 - Device makers and sensitive payment apps can apply additional restrictions. Test the behaviour on your own device before relying on it.
 
 ## Testing status

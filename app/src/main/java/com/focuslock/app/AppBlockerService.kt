@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
@@ -13,28 +14,15 @@ class AppBlockerService : AccessibilityService() {
 
     private val tag = "AppBlockerService"
 
-    private val blockedApps = mapOf(
-        "com.instagram.android" to "Instagram",
-        "com.google.android.youtube" to "YouTube",
-        "com.reddit.frontpage" to "Reddit"
-    )
-
-    /**
-     * These apps must never have a FocusLock window left over them. Some
-     * payment apps reject any visible overlay as a security precaution.
-     */
-    private val paymentSafePackages = setOf(
-        "com.google.android.apps.nbu.paisa.user", // Google Pay India
-        "com.phonepe.app",
-        "net.one97.paytm",
-        "in.org.npci.upiapp" // BHIM
-    )
-
     private val transientPackages = setOf(
         "com.focuslock.app",
         "com.android.systemui",
+        "com.android.launcher",
+        "com.android.launcher3",
         "com.coloros.systemui",
+        "com.coloros.launcher",
         "com.oplus.systemui",
+        "com.oppo.launcher",
         "com.google.android.inputmethod.latin",
         "com.coloros.inputmethod",
         "com.oplus.inputmethod",
@@ -48,10 +36,13 @@ class AppBlockerService : AccessibilityService() {
     private var pauseExpiryRunnable: Runnable? = null
     private var overlayActive = false
     private var activeOverlayMode: OverlayService.OverlayMode? = null
+    private var activeBlockedPackage: String? = null
+    private var overlayRequestedAtMillis = 0L
     private var lastForegroundPackage: String? = null
 
     companion object {
-        private const val EXIT_CONFIRMATION_MILLIS = 250L
+        private const val EXIT_CONFIRMATION_MILLIS = 600L
+        private const val OVERLAY_START_GRACE_MILLIS = 1_500L
 
         @Volatile
         private var activeInstance: AppBlockerService? = null
@@ -82,9 +73,20 @@ class AppBlockerService : AccessibilityService() {
         }
 
         val packageName = event.packageName?.toString() ?: return
-        Log.d(tag, "Foreground app changed: $packageName")
+        val className = event.className?.toString().orEmpty()
+        Log.d(tag, "Window changed: $packageName / $className")
         lastForegroundPackage = packageName
         syncOverlayState()
+
+        if (TimeZoneHelper.getCurrentZone() == TimeZoneHelper.BlockZone.FREE) {
+            cancelPauseExpiryCheck()
+            if (overlayActive || OverlayService.isRunning) {
+                stopOverlayService("Free zone started")
+            } else {
+                cancelPendingStop()
+            }
+            return
+        }
 
         if (FocusLockState.isPaused(this)) {
             stopOverlayService("FocusLock is paused")
@@ -93,15 +95,21 @@ class AppBlockerService : AccessibilityService() {
         }
         cancelPauseExpiryCheck()
 
+        val selectedPackages = BlockedAppsStore.getSelectedPackages(this)
+
         when {
+            packageName == applicationContext.packageName && overlayActive -> {
+                Log.d(tag, "Ignoring FocusLock's own overlay window event")
+            }
+
             packageName == applicationContext.packageName ->
                 stopOverlayService("FocusLock controls opened")
 
-            packageName in paymentSafePackages ->
+            packageName in BlockedAppsStore.paymentSafePackages ->
                 stopOverlayService("Payment-safe app opened: $packageName")
 
-            packageName in blockedApps ->
-                handleBlockedPackage(packageName, blockedApps.getValue(packageName))
+            packageName in selectedPackages ->
+                handleBlockedPackage(packageName)
 
             packageName in transientPackages && overlayActive -> {
                 Log.d(tag, "Ignoring transient package while overlay state settles: $packageName")
@@ -124,17 +132,18 @@ class AppBlockerService : AccessibilityService() {
         super.onDestroy()
     }
 
-    private fun handleBlockedPackage(packageName: String, appLabel: String) {
+    private fun handleBlockedPackage(packageName: String) {
         cancelPendingStop()
+        val appLabel = BlockedAppsStore.getAppLabel(this, packageName)
 
         when (TimeZoneHelper.getCurrentZone()) {
             TimeZoneHelper.BlockZone.HARD_BLOCK -> {
                 Log.d(tag, "HARD_BLOCK for $packageName")
-                startOverlayService(OverlayService.OverlayMode.HARD, appLabel)
+                startOverlayService(OverlayService.OverlayMode.HARD, packageName, appLabel)
             }
             TimeZoneHelper.BlockZone.SOFT_BLOCK -> {
                 Log.d(tag, "SOFT_BLOCK for $packageName")
-                startOverlayService(OverlayService.OverlayMode.SOFT, appLabel)
+                startOverlayService(OverlayService.OverlayMode.SOFT, packageName, appLabel)
             }
             TimeZoneHelper.BlockZone.FREE -> {
                 stopOverlayService("Free zone for $packageName")
@@ -142,20 +151,26 @@ class AppBlockerService : AccessibilityService() {
         }
     }
 
-    private fun startOverlayService(mode: OverlayService.OverlayMode, appLabel: String) {
+    private fun startOverlayService(
+        mode: OverlayService.OverlayMode,
+        packageName: String,
+        appLabel: String
+    ) {
         if (!Settings.canDrawOverlays(this)) {
             Log.d(tag, "Overlay permission missing; cannot block $appLabel")
             stopOverlayService("Overlay permission missing")
             return
         }
 
-        if (OverlayService.isRunning && overlayActive && activeOverlayMode == mode) {
-            Log.d(tag, "Overlay already active in $mode mode; keeping current overlay")
+        if (overlayActive && activeOverlayMode == mode && activeBlockedPackage == packageName) {
+            Log.d(tag, "Overlay already requested for $packageName in $mode mode")
             return
         }
 
         overlayActive = true
         activeOverlayMode = mode
+        activeBlockedPackage = packageName
+        overlayRequestedAtMillis = SystemClock.elapsedRealtime()
 
         val intent = Intent(this, OverlayService::class.java).apply {
             putExtra(OverlayService.EXTRA_OVERLAY_MODE, mode.name)
@@ -171,8 +186,17 @@ class AppBlockerService : AccessibilityService() {
 
     private fun stopOverlayService(reason: String) {
         cancelPendingStop()
+        if (!overlayActive && !OverlayService.isRunning) {
+            activeOverlayMode = null
+            activeBlockedPackage = null
+            overlayRequestedAtMillis = 0L
+            return
+        }
+
         overlayActive = false
         activeOverlayMode = null
+        activeBlockedPackage = null
+        overlayRequestedAtMillis = 0L
         stopService(Intent(this, OverlayService::class.java))
         Log.d(tag, "Overlay stopped: $reason")
     }
@@ -197,9 +221,14 @@ class AppBlockerService : AccessibilityService() {
     }
 
     private fun syncOverlayState() {
-        if (overlayActive && !OverlayService.isRunning) {
+        val requestStillStarting = overlayRequestedAtMillis > 0L &&
+            SystemClock.elapsedRealtime() - overlayRequestedAtMillis < OVERLAY_START_GRACE_MILLIS
+
+        if (overlayActive && !OverlayService.isRunning && !requestStillStarting) {
             overlayActive = false
             activeOverlayMode = null
+            activeBlockedPackage = null
+            overlayRequestedAtMillis = 0L
         }
     }
 
@@ -210,8 +239,10 @@ class AppBlockerService : AccessibilityService() {
 
         pauseExpiryRunnable = Runnable {
             val foregroundPackage = lastForegroundPackage ?: return@Runnable
-            if (!FocusLockState.isPaused(this) && foregroundPackage in blockedApps) {
-                handleBlockedPackage(foregroundPackage, blockedApps.getValue(foregroundPackage))
+            if (!FocusLockState.isPaused(this) &&
+                foregroundPackage in BlockedAppsStore.getSelectedPackages(this)
+            ) {
+                handleBlockedPackage(foregroundPackage)
             }
         }
         stopHandler.postDelayed(requireNotNull(pauseExpiryRunnable), remaining + 250L)

@@ -15,7 +15,7 @@
 
     <string name="dashboard_eyebrow">YOUR DISTRACTION BOUNCER</string>
     <string name="dashboard_title">FocusLock</string>
-    <string name="dashboard_subtitle">Instagram, YouTube, and Reddit can wait.</string>
+    <string name="dashboard_subtitle">Your chosen distractions can wait.</string>
     <string name="status_label">CURRENT STATUS</string>
     <string name="status_ready">Ready and watching</string>
     <string name="status_paused">Taking a short break</string>
@@ -48,6 +48,13 @@
     <string name="section_plan">YOUR PLAN</string>
     <string name="blocked_apps_title">Blocked apps</string>
     <string name="blocked_apps_value">Instagram  ·  YouTube  ·  Reddit</string>
+    <string name="blocked_apps_empty">No apps selected</string>
+    <string name="choose_blocked_apps_button">Choose distracting apps</string>
+    <string name="choose_blocked_apps_title">Choose apps to block</string>
+    <string name="choose_blocked_apps_message">Select any installed app. Payment apps and FocusLock are kept out of this list for safety.</string>
+    <string name="save_blocked_apps">Save selection</string>
+    <string name="blocked_apps_saved">Your blocked-app list is updated.</string>
+    <string name="no_apps_found">No launchable apps were found.</string>
     <string name="schedule_title">Daily rhythm</string>
     <string name="schedule_value">Hard 8:30 PM–10 AM  ·  Soft 10 AM–3 PM</string>
 
@@ -108,5 +115,5 @@
     <string name="notification_channel_name">FocusLock block screen</string>
     <string name="notification_title">FocusLock is active</string>
     <string name="notification_body">Tap for pause and payment safety controls.</string>
-    <string name="accessibility_service_description">FocusLock notices when Instagram, YouTube, or Reddit is in the foreground so it can show your focus screen.</string>
+    <string name="accessibility_service_description">FocusLock notices when one of your selected apps is in the foreground so it can show your focus screen.</string>
 </resources>
